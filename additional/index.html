@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+</head>
+<body>
+    <h1>Hand Drawing Prediction</h1>
+    <form id="predictionForm" action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" accept="image/*">
+        <button type="submit">Predict</button>
+    </form>
 
+    <!-- Container to display predictions -->
+    <div id="predictionResult"></div>
+
+    <!-- JavaScript to handle form submission and display predictions -->
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get form data
+            var formData = new FormData();
+            formData.append('file', document.getElementById('fileInput').files[0]);
+
+            // Make POST request to Flask endpoint
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(predictionResult => {
+                // Display prediction result in the 'predictionResult' div
+                document.getElementById('predictionResult').innerHTML = predictionResult;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
